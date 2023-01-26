@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Background.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Media.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -79,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\projetil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icone.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

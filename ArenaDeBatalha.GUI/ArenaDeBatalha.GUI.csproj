@@ -44,6 +44,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormPrincipal.cs">
@@ -78,6 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArenaDeBatalha.GameLogic\ArenaDeBatalha.GameLogic.csproj">
+      <Project>{e6e69987-a571-4062-aca9-97a8f0d982b5}</Project>
+      <Name>ArenaDeBatalha.GameLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
