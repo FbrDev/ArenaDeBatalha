@@ -17,7 +17,7 @@ namespace ArenaDeBatalha.GameLogic
         public Size Bounds { get; set; }
         public Rectangle Rectangle { get; set; }
         public Stream Sound { get; set; }
-        public Graphics Screen { get; set; }
+        public Graphics ScreenPainter { get; set; }
         private SoundPlayer soundPlayer { get; set; }
         #endregion
 
@@ -25,10 +25,10 @@ namespace ArenaDeBatalha.GameLogic
 
         public abstract Bitmap GetSprite();
 
-        public GameObject(Size bounds, Graphics screen)
+        public GameObject(Size bounds, Graphics screenPainter)
         {
             this.Bounds = bounds;
-            this.Screen= screen;
+            this.ScreenPainter = screenPainter;
             this.Active = true;
             this.soundPlayer = new SoundPlayer();
             this.Sprite = GetSprite();
@@ -38,7 +38,7 @@ namespace ArenaDeBatalha.GameLogic
         public virtual void UpdateObject()
         {
             this.Rectangle = new Rectangle(this.Left, this.Top, this.Width, this.Height);
-            this.Screen.DrawImage(this.Sprite, this.Rectangle);
+            this.ScreenPainter.DrawImage(this.Sprite, this.Rectangle);
         }
 
         public virtual void MoveLeft()

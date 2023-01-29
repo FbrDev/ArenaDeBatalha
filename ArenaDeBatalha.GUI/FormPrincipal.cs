@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -17,10 +18,12 @@ namespace ArenaDeBatalha.GUI
         Graphics screenPainter { get; set; }
         Background background { get; set; }
         Player player { get; set; }
+        GameOver gameOver { get; set; }
         List<GameObject> gameObjects { get; set; }
         public Random random { get; set; }
 
         bool canShoot;
+
         public FormPrincipal()
         {
             InitializeComponent();
@@ -32,6 +35,7 @@ namespace ArenaDeBatalha.GUI
             this.gameObjects = new List<GameObject>();
             this.background = new Background(this.screenBuffer.Size, this.screenPainter);
             this.player = new Player(this.screenBuffer.Size, this.screenPainter);
+            this.gameOver = new GameOver(this.screenBuffer.Size, this.screenPainter);
 
             this.gameLoopTimer = new DispatcherTimer(DispatcherPriority.Render);
             this.gameLoopTimer.Interval = TimeSpan.FromMilliseconds(16.66666);
@@ -41,17 +45,29 @@ namespace ArenaDeBatalha.GUI
             this.enemySpawnTimer.Interval = TimeSpan.FromMilliseconds(1000);
             this.enemySpawnTimer.Tick += SpawnEnemy;
 
-            this.gameObjects.Add(this.background);
-            this.gameObjects.Add(this.player);
-
             StartGame();
         }
 
         public void StartGame()
         {
+            this.gameObjects.Clear();
+            this.gameObjects.Add(background);
+            this.gameObjects.Add(player);
+            this.player.SetStartPosition();
+            this.player.Active = true;
             this.gameLoopTimer.Start();
             this.enemySpawnTimer.Start();
             this.canShoot = true;
+        }
+
+        public void EndGame()
+        {
+            this.gameObjects.Clear();
+            this.gameLoopTimer.Stop();
+            this.enemySpawnTimer.Stop();
+            this.background.UpdateObject();
+            this.gameOver.UpdateObject();
+            Invalidate();
         }
 
         public void SpawnEnemy(object sender, EventArgs e)
@@ -75,6 +91,25 @@ namespace ArenaDeBatalha.GUI
                 {
                     go.Destroy();
                 }
+
+                if (go is Enemy)
+                {
+                    if (go.IsCollidingWith(player))
+                    {
+                        player.Destroy();
+                        player.PlaySound();
+                        EndGame();
+                        return;
+                    }
+                    foreach (GameObject bullet in this.gameObjects.Where(x => x is Bullet))
+                    {
+                        if (go.IsCollidingWith(bullet))
+                        {
+                            go.Destroy();
+                            bullet.Destroy();
+                        }
+                    }
+                }
             }
 
             this.Invalidate();
@@ -94,10 +129,22 @@ namespace ArenaDeBatalha.GUI
             if (Keyboard.IsKeyDown(Key.Down)) player.MoveDown();
             if (Keyboard.IsKeyDown(Key.Space) && canShoot)
             {
-                this.gameObjects.Add(player.Shoot());
+                this.gameObjects.Insert(1, player.Shoot());
                 this.canShoot = false;
             }
             if (Keyboard.IsKeyUp(Key.Space)) canShoot = true;
+        }
+
+        private void FormPrincipal_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.R)
+            {
+                StartGame();
+            }
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
         }
     }
 }

@@ -8,6 +8,11 @@ namespace ArenaDeBatalha.GameLogic
         {
             this.Speed = 10;
             this.Sound = Media.explosion_long;
+            SetStartPosition();
+        }
+
+        public void SetStartPosition()
+        {
             this.Left = this.Bounds.Width / 2 - this.Width / 2;
             this.Top = this.Bounds.Height - this.Height;
         }
@@ -15,11 +20,6 @@ namespace ArenaDeBatalha.GameLogic
         public override Bitmap GetSprite()
         {
             return Media.jogador;
-        }
-
-        public override void UpdateObject()
-        {
-            base.UpdateObject();
         }
 
         public override void MoveUp()
@@ -36,7 +36,7 @@ namespace ArenaDeBatalha.GameLogic
 
         public GameObject Shoot()
         {
-            Bullet bullet = new Bullet(this.Bounds, this.Screen, new Point(this.Left + this.Width / 2, this.Top + this.Height / 2));
+            Bullet bullet = new Bullet(this.Bounds, this.ScreenPainter, new Point(this.Left + this.Width / 2, this.Top + this.Height / 2));
             bullet.Left -= bullet.Width / 2;
             return bullet;
         }
