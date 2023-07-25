@@ -29,7 +29,8 @@ namespace ArenaDeBatalha.GUI
             InitializeComponent();
 
             this.random = new Random();
-            this.ClientSize = Media.fundo.Size;
+            float scaleX = Screen.PrimaryScreen.WorkingArea.Width / 1920.0F;
+            this.ClientSize = new Size((int)(775 / scaleX), (int)(572 / scaleX));        
             this.screenBuffer = new Bitmap(Media.fundo.Width, Media.fundo.Height);
             this.screenPainter = Graphics.FromImage(this.screenBuffer);
             this.gameObjects = new List<GameObject>();
