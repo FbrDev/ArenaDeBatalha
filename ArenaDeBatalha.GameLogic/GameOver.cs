@@ -15,5 +15,10 @@ namespace ArenaDeBatalha.GameLogic
         {
             return Media.GameOver;
         }
+
+        public void SetGameOverState(bool isGameOver)
+        {
+            this.Active = isGameOver;
+        }
     }
 }

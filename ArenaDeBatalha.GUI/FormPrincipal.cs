@@ -24,6 +24,8 @@ namespace ArenaDeBatalha.GUI
 
         bool canShoot;
 
+        int score { get; set; }
+
         public FormPrincipal()
         {
             InitializeComponent();
@@ -45,6 +47,8 @@ namespace ArenaDeBatalha.GUI
             this.enemySpawnTimer = new DispatcherTimer(DispatcherPriority.Render);
             this.enemySpawnTimer.Interval = TimeSpan.FromMilliseconds(1000);
             this.enemySpawnTimer.Tick += SpawnEnemy;
+
+            this.Load += FormPrincipal_Load;
 
             StartGame();
         }
@@ -78,8 +82,34 @@ namespace ArenaDeBatalha.GUI
             this.gameObjects.Add(enemy);
         }
 
+        private void FormPrincipal_Load(object sender, EventArgs e)
+        {
+            Label lblScore = new Label();
+            lblScore.Text = "Score: 0";
+            lblScore.Location = new Point(10, 10);
+            lblScore.AutoSize = true;
+            this.Controls.Add(lblScore);
+        }
+
+        private void UpdateScoreLabel()
+        {
+            foreach (Control control in this.Controls)
+            {
+                if (control is Label && control.Text.StartsWith("Score: "))
+                {
+                    control.Text = "Score: " + score;
+                    break;
+                }
+            }
+        }
+
         public void GameLoop(object sender, EventArgs e)
         {
+            if (score > 0)
+            {
+                UpdateScoreLabel();
+            }
+
             this.gameObjects.RemoveAll(x => !x.Active);
 
             this.ProcessControls();
@@ -108,6 +138,11 @@ namespace ArenaDeBatalha.GUI
                         {
                             go.Destroy();
                             bullet.Destroy();
+
+                            if (!go.Active)
+                            {
+                                score++;
+                            }
                         }
                     }
                 }
